@@ -1,0 +1,15 @@
+date,time,strength,direction,desired
+2/28/2021,10:54,medium,N,N
+2/28/2021,13:50,mild,N,N
+3/3/2021,8:25,medium,N,N
+3/5/2021,8:19,medium,N,N
+3/21/2021,7:45,medium,N,N
+4/4/2021,7:59,mild,S,Y
+4/7/2021,8:32,strong,N,N
+4/16/2021,8:49,mild,N,Y
+11/26/2021,9:20,slack,,Y
+11/8/2022,7:44,mild,S,Y
+11/9/2022,7:36,medium,N,N
+12/3/2022,9:14,medium,N,N
+12/4/2022,9:14,slack,,Y
+12/18/2022,9:14,mild,N,Y
