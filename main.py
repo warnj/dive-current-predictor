@@ -1,5 +1,6 @@
 '''
-This program is used to
+This program is a ML classifier used to identify the features with greatest influence on currents off
+Red Hill / Puu Olai, Maui
 '''
 import csv
 import datetime
@@ -24,6 +25,7 @@ def main():
             print(phase)
 
             print(f'checking tide height for {row["date"]} at {row["time"]}')
+
 
 
             line_count += 1
