@@ -1,3 +1,6 @@
 astral
 bs4
 requests
+scikit-learn
+pandas
+numpy

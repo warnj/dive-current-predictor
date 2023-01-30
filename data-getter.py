@@ -76,48 +76,55 @@ def checkTideInfo(date, time):
     print("tide after dive:", post)
     type = "flood" if pre.low else "ebb"
     size = abs(pre.height - post.height)
+    dur = (post.time - pre.time).total_seconds() / 60
     after = (midTime - pre.time).total_seconds() / 60
     before = (post.time - midTime).total_seconds() / 60
     print("exchange type:", type)
     print("exchange size:", size)
+    print("exchange duration:", dur)
     print("time after tide slack (minutes):", after)
     print("time before tide slack (minutes):", before)
     print()
-    return type, size, after, before
+    return type, size, dur, after, before
+
+# def getMoonPhase():
+    # should probably just fill this in by hand
+    # https://www.almanac.com/astronomy/moon/calendar/zipcode/96753/2022-12
 
 def main():
     # consider using the water level api in Kahului to get real-time water level
     # url = "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=water_level&application=NOS.COOPS.TAC.WL&datum=MLLW&station=1615680&time_zone=LST&units=english&format=json"
 
-        with open('data.csv', mode='r') as data_read:
-            csv_reader = csv.DictReader(data_read, delimiter=',')
+    with open('data.csv', mode='r') as data_read:
+        csv_reader = csv.DictReader(data_read, delimiter=',')
 
-            with open('data-features.csv', mode='w', newline='') as data_write:
-                csv_writer = None
+        with open('data-features.csv', mode='w', newline='') as data_write:
+            csv_writer = None
 
-                line_count = 0
-                for row in csv_reader:
-                    if line_count == 0:
-                        print('Columns being read are:', row.keys())
-                        new_keys = []
-                        new_keys.extend(row.keys())
-                        new_keys.extend(['moon', 'tide_type', 'tide_size', 'tide_after', 'tide_before'])
-                        print('Columns being written are:', new_keys)
-                        csv_writer = csv.DictWriter(data_write, delimiter=',', fieldnames=new_keys)
-                        csv_writer.writeheader()
+            line_count = 0
+            for row in csv_reader:
+                if line_count == 0:
+                    print('Columns being read are:', row.keys())
+                    new_keys = []
+                    new_keys.extend(row.keys())
+                    new_keys.extend(['moon', 'tide_type', 'tide_size', 'tide_duration', 'tide_after', 'tide_before'])
+                    print('Columns being written are:', new_keys)
+                    csv_writer = csv.DictWriter(data_write, delimiter=',', fieldnames=new_keys)
+                    csv_writer.writeheader()
 
-                    date, time = row['date'], row['time']
-                    print('checking tide height for {} at {}'.format(date, time))
-                    type, size, after, before = checkTideInfo(date, time)
-                    row['moon'] = moon.phase(getDateTimeDash(date, time))
-                    row['tide_type'] = type
-                    row['tide_size'] = size
-                    row['tide_after'] = after
-                    row['tide_before'] = before
-                    csv_writer.writerow(row)
+                date, time = row['date'], row['time']
+                print('checking tide height for {} at {}'.format(date, time))
+                type, size, dur, after, before = checkTideInfo(date, time)
+                row['moon'] = moon.phase(getDateTimeDash(date, time)) / 28.0
+                row['tide_type'] = type
+                row['tide_size'] = size
+                row['tide_duration'] = dur
+                row['tide_after'] = after
+                row['tide_before'] = before
+                csv_writer.writerow(row)
 
-                    line_count += 1
-                print(f'Processed {line_count} dives.')
+                line_count += 1
+            print(f'Processed {line_count} dives.')
 
 if __name__ == '__main__':
     main()
